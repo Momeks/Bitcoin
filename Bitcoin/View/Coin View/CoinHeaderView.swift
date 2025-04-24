@@ -9,43 +9,65 @@ import SwiftUI
 import CoinKit
 
 struct CoinHeaderView: View {
-    var coin: Coin
+    @StateObject private var viewModel = CoinViewModel()
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
-                AsyncImage(url: URL(string: coin.image.large)) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 40)
-                } placeholder: {
-                    ProgressView()
+        VStack {
+            switch viewModel.state {
+            case .idle:
+                EmptyView()
+                
+            case .loading:
+                LoadingHeaderView()
+                
+            case .success(let coin):
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 10) {
+                        AsyncImage(url: URL(string: coin.image.large)) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 40)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        
+                        Text(coin.name)
+                            .font(.largeTitle)
+                            .bold()
+                        
+                        Text(coin.symbol)
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                    }
+                    
+                    if let eur = coin.marketData.currentPrice["eur"] {
+                        Text("€\(eur, specifier: "%.2f")")
+                            .font(.largeTitle)
+                            .bold()
+                    }
+                    
+                    PriceChangeView(change: coin.marketData.priceChange24H,
+                                    percentage: coin.marketData.priceChangePercentage24H)
+                    
+                    Text("Last Updated: \(coin.toDateString())")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
+                .padding(.bottom)
                 
-                Text(coin.name)
-                    .font(.largeTitle)
-                    .bold()
-                
-                Text(coin.symbol)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
+            case .failure(let errorMessage):
+                VStack {
+                    Text("Failed to load coin data")
+                        .foregroundColor(.red)
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
             }
-            
-            if let eur = coin.marketData.currentPrice["eur"] {
-                Text("€\(eur, specifier: "%.2f")")
-                    .font(.largeTitle)
-                    .bold()
-            }
-            
-            PriceChangeView(change: coin.marketData.priceChange24H,
-                            percentage: coin.marketData.priceChangePercentage24H)
-            
-            Text("Last Updated: \(coin.toDateString())")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Spacer()
+        }
+        .task {
+            await viewModel.fetchCoinData()
         }
     }
 }
@@ -66,5 +88,5 @@ struct PriceChangeView: View {
 }
 
 #Preview {
-    CoinHeaderView(coin: Coin.preview)
+    CoinHeaderView()
 }
