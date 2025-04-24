@@ -10,7 +10,7 @@ import NetworkKit
 
 enum CoinGeckoPath {
     case coin(id: String)
-    case marketChart(id: String, vsCurrency: String, days: String)
+    case marketChart(id: String, currency: String, days: String)
 
     var id: String {
         switch self {
@@ -32,9 +32,9 @@ enum CoinGeckoPath {
         switch self {
         case .coin:
             return []
-        case .marketChart(_, let vsCurrency, let days):
+        case .marketChart(_, let currency, let days):
             return [
-                URLQueryItem(name: "vs_currency", value: vsCurrency),
+                URLQueryItem(name: "vs_currency", value: currency),
                 URLQueryItem(name: "days", value: days)
             ]
         }
