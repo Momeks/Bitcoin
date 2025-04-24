@@ -42,7 +42,7 @@ struct CoinHeaderView: View {
                     }
                     
                     if let eur = coin.marketData.currentPrice["eur"] {
-                        Text("€\(eur, specifier: "%.2f")")
+                        Text(eur.formatted(.currency(code: "eur")))
                             .font(.largeTitle)
                             .bold()
                     }
@@ -54,7 +54,6 @@ struct CoinHeaderView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                .padding(.bottom)
                 
             case .failure(let errorMessage):
                 VStack {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoadingHeaderView: View {
     @State private var isFading = false
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -24,7 +24,6 @@ struct LoadingHeaderView: View {
                 
                 Text("btc")
                     .font(.title3)
-                    .foregroundStyle(.secondary)
             }
             
             Text("€ 81,965.00")
@@ -40,7 +39,7 @@ struct LoadingHeaderView: View {
         .redacted(reason: .placeholder)
         .opacity(isFading ? 0.4 : 1.0)
         .onAppear {
-            withAnimation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+            withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
                 isFading.toggle()
             }
         }

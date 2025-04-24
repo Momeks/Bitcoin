@@ -10,10 +10,12 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 20) {
                 CoinHeaderView()
-                    .frame(height: 170)
+                
+                MarketChartListView()
             }
+            .fontDesign(.rounded)
         }
     }
 }
