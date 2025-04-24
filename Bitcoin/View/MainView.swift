@@ -15,6 +15,13 @@ struct MainView: View {
                 
                 MarketChartListView()
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("refresh", systemImage: "arrow.clockwise") {
+                        NotificationCenter.default.post(name: .refreshData, object: nil)
+                    }
+                }
+            }
         }
     }
 }

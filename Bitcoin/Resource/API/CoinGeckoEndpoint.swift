@@ -34,7 +34,7 @@ enum CoinGeckoPath {
                 URLQueryItem(name: "days", value: days) /// 14
             ]
         case .historicalData(_, date: let date):
-            return [URLQueryItem(name: "date", value: date)] /// date format dd-mm-yyyy
+            return [URLQueryItem(name: "date", value: date)] /// date format: dd-MM-yyyy
         }
     }
 }

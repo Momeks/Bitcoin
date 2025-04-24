@@ -18,7 +18,7 @@ struct CoinDetailView: View {
         return dateFormatter.string(from: date)
     }
     
-    private var displayDate: String {
+    private var titleDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
         return dateFormatter.string(from: date)
@@ -46,9 +46,6 @@ struct CoinDetailView: View {
                         .listStyle(.plain)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .navigationTitle(displayDate)
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarRole(.editor)
                 } else {
                     ErrorView(errorMessage: "No price data available for this date.")
                 }
@@ -57,6 +54,9 @@ struct CoinDetailView: View {
                 ErrorView(errorMessage: errorMessage)
             }
         }
+        .navigationTitle(titleDate)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarRole(.editor)
         .task {
             await viewModel.fetchHistoricalData(from: formattedDate)
         }
