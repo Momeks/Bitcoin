@@ -20,7 +20,7 @@ struct MarketChartLoadingView: View {
                     .bold()
             }
             .redacted(reason: .placeholder)
-            .opacity(isFading ? 0.4 : 1.0)
+            .opacity(isFading ? 0.5 : 1.0)
             .onAppear {
                 withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
                     isFading.toggle()

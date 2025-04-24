@@ -29,57 +29,39 @@ struct CoinDetailView: View {
             switch viewModel.state {
             case .idle:
                 EmptyView()
+                
             case .loading:
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                CoinDetailLoading()
+                
             case .success(let coin):
                 NavigationStack {
-                    Section {
-                        List {
-                            ForEach(currencies, id: \.self) { currency in
-                                if let price = coin.marketData.currentPrice[currency.id] {
-                                    currencyView(currency: currency, price: price)
-                                }
-                            }
-                        }
-                    } header: {
+                    VStack(spacing: 0) {
                         Text(displayDate)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.title)
                             .padding(.horizontal)
+                        
+                        List {
+                            ForEach(currencies, id: \.self) { currency in
+                                if let price = coin.marketData.currentPrice[currency.id] {
+                                    CurrencyView(currency: currency, price: price)
+                                }
+                            }
+                        }
+                        .listStyle(.plain)
                     }
-                    .listStyle(.plain)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .navigationTitle(coin.name)
                 .navigationBarTitleDisplayMode(.large)
+                .toolbarRole(.editor)
                 
             case .failure(let errorMessage):
                 ErrorView(errorMessage: errorMessage)
             }
         }
         .task {
-            print(formatedDate)
-            await viewModel.fetchHistoricaData(from: formatedDate)
-        }
-    }
-    
-    @ViewBuilder
-    private func currencyView(currency: Currency, price: Double) -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(currency.flag)
-                    .font(.largeTitle)
-                
-                Text(currency.description)
-                    .font(.title3)
-                    .fontWeight(.medium)
-            }
-            
-            Text(price.formatted(.currency(code: currency.id)))
-                .bold()
-                .font(.title3)
-                .foregroundStyle(.secondary)
+            await viewModel.fetchHistoricalData(from: formatedDate)
         }
     }
 }

@@ -33,7 +33,7 @@ class HistoricalDataViewModel: ObservableObject {
     }
     
     @MainActor
-    func fetchHistoricaData(from date: String) async {
+    func fetchHistoricalData(from date: String) async {
         cancelTask()
         
         state = .loading
