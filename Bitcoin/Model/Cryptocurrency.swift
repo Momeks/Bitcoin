@@ -13,8 +13,8 @@ import Foundation
  */
 
 enum Cryptocurrency: String {
-    case bitcoin = "bitcoin"
-    case ethereum = "ethereum"
+    case bitcoin
+    case ethereum
 }
 
 extension Cryptocurrency {
