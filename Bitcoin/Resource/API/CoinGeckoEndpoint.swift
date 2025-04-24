@@ -11,23 +11,26 @@ import NetworkKit
 enum CoinGeckoPath {
     case coin(id: String)
     case marketChart(id: String, currency: String, days: String)
-
+    case historicalData(id: String, date: String)
+    
     var id: String {
         switch self {
-        case .coin(let id), .marketChart(let id, _, _):
+        case .coin(let id), .marketChart(let id, _, _), .historicalData(id: let id, _):
             return id
         }
     }
-
+    
     var path: String {
         switch self {
         case .coin(let id):
             return "coins/\(id)"
         case .marketChart(let id, _, _):
             return "coins/\(id)/market_chart"
+        case .historicalData(let id, _):
+            return "coins/\(id)/history"
         }
     }
-
+    
     var queryItems: [URLQueryItem] {
         switch self {
         case .coin:
@@ -37,6 +40,8 @@ enum CoinGeckoPath {
                 URLQueryItem(name: "vs_currency", value: currency),
                 URLQueryItem(name: "days", value: days)
             ]
+        case .historicalData(_, date: let date):
+            return [URLQueryItem(name: "date", value: date)] // Format: dd-mm-yyyy
         }
     }
 }
@@ -44,33 +49,33 @@ enum CoinGeckoPath {
 struct CoinGeckoEndpoint: Endpoint {
     let pathType: CoinGeckoPath
     let apiKey: String
-
+    
     var id: String {
         pathType.id
     }
-
+    
     var baseURL: URL {
         URL(string: "https://api.coingecko.com/api/v3")!
     }
-
+    
     var path: String {
         pathType.path
     }
-
+    
     var method: HTTPMethod {
         .get
     }
-
+    
     var headers: [String: String]? {
         nil
     }
-
+    
     var queryItems: [URLQueryItem]? {
         var items = pathType.queryItems
         items.append(URLQueryItem(name: "x_cg_demo_api_key", value: apiKey))
         return items
     }
-
+    
     var body: Data? {
         nil
     }

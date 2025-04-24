@@ -22,25 +22,21 @@ struct MarketChartListView: View {
             case .success(let marketChart):
                 List {
                     ForEach(marketChart.toHistoricalPrices()) { price in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(price.date, style: .date)
-                                .bold()
-                                .foregroundStyle(.secondary)
-                            Text("€\(price.price, specifier: "%.2f")")
-                                .bold()
+                        NavigationLink(destination: Text(price.date.formatted())) {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(price.date, style: .date)
+                                    .bold()
+                                    .foregroundStyle(.secondary)
+                                Text("€\(price.price, specifier: "%.2f")")
+                                    .bold()
+                            }
                         }
                     }
                 }
                 .listStyle(.plain)
                 
-            case .failure(let error):
-                VStack {
-                    Text("Failed to load chart data")
-                        .foregroundColor(.red)
-                    Text(error)
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+            case .failure(let errorMessage):
+                ErrorView(errorMessage: errorMessage)
             }
         }
         .task {

@@ -56,13 +56,7 @@ struct CoinHeaderView: View {
                 }
                 
             case .failure(let errorMessage):
-                VStack {
-                    Text("Failed to load coin data")
-                        .foregroundColor(.red)
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+                ErrorView(errorMessage: errorMessage)
             }
         }
         .task {

@@ -53,7 +53,6 @@ class MarketChartViewModel: ObservableObject {
             } catch is CancellationError {
                 return
             } catch {
-                print(error.localizedDescription)
                 state = .failure(error.localizedDescription)
             }
         }
