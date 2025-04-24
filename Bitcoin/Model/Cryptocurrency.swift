@@ -15,9 +15,7 @@ import Foundation
 enum Cryptocurrency: String {
     case bitcoin
     case ethereum
-}
-
-extension Cryptocurrency {
+    
     var id: String {
         return self.rawValue
     }

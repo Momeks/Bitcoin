@@ -12,7 +12,7 @@ struct CoinDetailView: View {
     @StateObject private var viewModel = HistoricalDataViewModel()
     private  let currencies: [Currency] = [.euro, .usd, .pound]
     
-    private var formatedDate: String {
+    private var formattedDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy"
         return dateFormatter.string(from: date)
@@ -34,34 +34,31 @@ struct CoinDetailView: View {
                 CoinDetailLoading()
                 
             case .success(let coin):
-                NavigationStack {
-                    VStack(spacing: 0) {
-                        Text(displayDate)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.title)
-                            .padding(.horizontal)
-                        
+                if let currentPrice = coin.marketData?.currentPrice, !currentPrice.isEmpty {
+                    NavigationStack {
                         List {
                             ForEach(currencies, id: \.self) { currency in
-                                if let price = coin.marketData.currentPrice[currency.id] {
+                                if let price = currentPrice[currency.id] {
                                     CurrencyView(currency: currency, price: price)
                                 }
                             }
                         }
                         .listStyle(.plain)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .navigationTitle(displayDate)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarRole(.editor)
+                } else {
+                    ErrorView(errorMessage: "No price data available for this date.")
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .navigationTitle(coin.name)
-                .navigationBarTitleDisplayMode(.large)
-                .toolbarRole(.editor)
                 
             case .failure(let errorMessage):
                 ErrorView(errorMessage: errorMessage)
             }
         }
         .task {
-            await viewModel.fetchHistoricalData(from: formatedDate)
+            await viewModel.fetchHistoricalData(from: formattedDate)
         }
     }
 }

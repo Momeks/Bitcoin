@@ -27,7 +27,7 @@ struct MarketChartListView: View {
                                 Text(price.date, style: .date)
                                     .bold()
                                     .foregroundStyle(.secondary)
-                                Text("€\(price.price, specifier: "%.2f")")
+                                Text(price.price.formatted(.currency(code: Currency.euro.id)))
                                     .bold()
                             }
                         }
@@ -38,9 +38,6 @@ struct MarketChartListView: View {
             case .failure(let errorMessage):
                 ErrorView(errorMessage: errorMessage)
             }
-        }
-        .task {
-            await viewModel.fetchMarketChartData()
         }
     }
 }

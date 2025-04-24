@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoadingHeaderView: View {
-    @State private var isFading = false
+    @State private var isLoading = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -37,10 +37,10 @@ struct LoadingHeaderView: View {
             Text("Last Updated: Thursday, April 24, 2025")
         }
         .redacted(reason: .placeholder)
-        .opacity(isFading ? 0.4 : 1.0)
+        .opacity(isLoading ? 0.4 : 1.0)
         .onAppear {
             withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                isFading.toggle()
+                isLoading.toggle()
             }
         }
     }

@@ -12,7 +12,7 @@ struct CoinHeaderView: View {
     @StateObject private var viewModel = CoinViewModel()
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             switch viewModel.state {
             case .idle:
                 EmptyView()
@@ -21,7 +21,7 @@ struct CoinHeaderView: View {
                 LoadingHeaderView()
                 
             case .success(let coin):
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {
                         AsyncImage(url: URL(string: coin.image.large)) { image in
                             image
@@ -51,7 +51,7 @@ struct CoinHeaderView: View {
                                     percentage: coin.marketData.priceChangePercentage24H)
                     
                     Text("Last Updated: \(coin.toDateString())")
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 
@@ -59,9 +59,8 @@ struct CoinHeaderView: View {
                 ErrorView(errorMessage: errorMessage)
             }
         }
-        .task {
-            await viewModel.fetchCoinData()
-        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
     }
 }
 

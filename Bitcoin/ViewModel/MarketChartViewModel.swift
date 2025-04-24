@@ -29,6 +29,10 @@ class MarketChartViewModel: ObservableObject {
         self.networkService = networkService
         self.endpointProvider = endpointProvider
         self.currency = currency
+        
+        Task {
+            await fetchMarketChartData()
+        }
     }
     
     @MainActor

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MarketChartLoadingView: View {
-    @State private var isFading = false
+    @State private var isLoading = false
     
     var body: some View {
         List(0..<14) { _ in
@@ -20,10 +20,10 @@ struct MarketChartLoadingView: View {
                     .bold()
             }
             .redacted(reason: .placeholder)
-            .opacity(isFading ? 0.5 : 1.0)
+            .opacity(isLoading ? 0.5 : 1.0)
             .onAppear {
                 withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
-                    isFading.toggle()
+                    isLoading.toggle()
                 }
             }
         }

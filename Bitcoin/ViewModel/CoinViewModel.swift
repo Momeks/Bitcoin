@@ -26,6 +26,10 @@ class CoinViewModel: ObservableObject {
          endpointProvider: EndpointProvider = CoinGeckoEndpointProvider()) {
         self.networkService = networkService
         self.endpointProvider = endpointProvider
+        
+        Task {
+            await fetchCoinData()
+        }
     }
     
     @MainActor
@@ -33,7 +37,7 @@ class CoinViewModel: ObservableObject {
         cancelTask()
         
         state = .loading
-        
+            
         let endpoint = endpointProvider.coinDetailsEndpoint(for: CryptoConfig.default)
         currentTask = Task {
             do {
