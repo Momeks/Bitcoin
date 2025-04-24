@@ -19,19 +19,15 @@ class MarketChartViewModel: ObservableObject {
     
     @Published private(set) var state: ViewState = .idle
     private let networkService: NetworkService
-    private let cryptocurrency: Cryptocurrency
     private let currency: Currency
     private let endpointProvider: EndpointProvider
     private var currentTask: Task<Void, Never>?
     
     init(networkService: NetworkService = URLSessionNetworkService(),
          endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(),
-         cryptocurrency: Cryptocurrency = .bitcoin,
          currency: Currency = .euro) {
-        
         self.networkService = networkService
         self.endpointProvider = endpointProvider
-        self.cryptocurrency = cryptocurrency
         self.currency = currency
     }
     
@@ -41,7 +37,7 @@ class MarketChartViewModel: ObservableObject {
         
         state = .loading
         
-        let endpoint = endpointProvider.marketChartEndpoint(for: self.cryptocurrency.id, currency: Currency.euro.rawValue, days: "14")
+        let endpoint = endpointProvider.marketChartEndpoint(for: CryptoConfig.default, currency: Currency.euro.rawValue, days: "14")
         currentTask = Task {
             do {
                 try Task.checkCancellation()

@@ -19,17 +19,13 @@ class HistoricalDataViewModel: ObservableObject {
     
     @Published private(set) var state: ViewState = .idle
     private let networkService: NetworkService
-    private let cryptocurrency: Cryptocurrency
     private let endpointProvider: EndpointProvider
     private var currentTask: Task<Void, Never>?
     
     init(networkService: NetworkService = URLSessionNetworkService(),
-         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(),
-         cryptocurrency: Cryptocurrency = .bitcoin) {
-        
+         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider()) {
         self.networkService = networkService
         self.endpointProvider = endpointProvider
-        self.cryptocurrency = cryptocurrency
     }
     
     @MainActor
@@ -38,7 +34,7 @@ class HistoricalDataViewModel: ObservableObject {
         
         state = .loading
         
-        let endpoint = endpointProvider.historicalDataEndpoint(for: self.cryptocurrency.id, date: date)
+        let endpoint = endpointProvider.historicalDataEndpoint(for: CryptoConfig.default, date: date)
         currentTask = Task {
             do {
                 try Task.checkCancellation()

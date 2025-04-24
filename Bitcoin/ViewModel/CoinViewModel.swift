@@ -19,17 +19,13 @@ class CoinViewModel: ObservableObject {
     
     @Published private(set) var state: ViewState = .idle
     private let networkService: NetworkService
-    private let cryptocurrency: Cryptocurrency
     private let endpointProvider: EndpointProvider
     private var currentTask: Task<Void, Never>?
     
     init(networkService: NetworkService = URLSessionNetworkService(),
-         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(),
-         cryptocurrency: Cryptocurrency = .bitcoin) {
-        
+         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider()) {
         self.networkService = networkService
         self.endpointProvider = endpointProvider
-        self.cryptocurrency = cryptocurrency
     }
     
     @MainActor
@@ -38,7 +34,7 @@ class CoinViewModel: ObservableObject {
         
         state = .loading
         
-        let endpoint = endpointProvider.coinDetailsEndpoint(for: self.cryptocurrency.id)
+        let endpoint = endpointProvider.coinDetailsEndpoint(for: CryptoConfig.default)
         currentTask = Task {
             do {
                 try Task.checkCancellation()
