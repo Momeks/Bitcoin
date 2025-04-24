@@ -4,13 +4,14 @@
 //
 //  Created by Mohammad Komeili on 4/24/25.
 //
+
 import Foundation
 import NetworkKit
 
 protocol EndpointProvider {
     func coinDetailsEndpoint(for id: String) -> Endpoint
     func marketChartEndpoint(for id: String, currency: String, days: String) -> Endpoint
-    func historicalEndpointData(for id: String, date: String) -> Endpoint
+    func historicalDataEndpoint(for id: String, date: String) -> Endpoint
 }
 
 class CoinGeckoEndpointProvider: EndpointProvider {
@@ -34,7 +35,7 @@ class CoinGeckoEndpointProvider: EndpointProvider {
         )
     }
     
-    func historicalEndpointData(for id: String, date: String) -> Endpoint {
+    func historicalDataEndpoint(for id: String, date: String) -> Endpoint {
         return CoinGeckoEndpoint(
             pathType: .historicalData(id: id, date: date),
             apiKey: apiKey

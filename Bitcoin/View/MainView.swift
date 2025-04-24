@@ -15,7 +15,6 @@ struct MainView: View {
                 
                 MarketChartListView()
             }
-            .fontDesign(.rounded)
         }
     }
 }

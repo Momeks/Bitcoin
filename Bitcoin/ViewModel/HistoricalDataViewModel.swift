@@ -1,5 +1,5 @@
 //
-//  MarketChartViewModel.swift
+//  HistoricalDataViewModel.swift
 //  Bitcoin
 //
 //  Created by Mohammad Komeili on 4/24/25.
@@ -9,48 +9,45 @@ import Foundation
 import CoinKit
 import NetworkKit
 
-class MarketChartViewModel: ObservableObject {
+class HistoricalDataViewModel: ObservableObject {
     enum ViewState {
         case idle
         case loading
-        case success(MarketChart)
+        case success(HistoricalData)
         case failure(String)
     }
     
     @Published private(set) var state: ViewState = .idle
     private let networkService: NetworkService
     private let cryptocurrency: Cryptocurrency
-    private let currency: Currency
     private let endpointProvider: EndpointProvider
     private var currentTask: Task<Void, Never>?
     
     init(networkService: NetworkService = URLSessionNetworkService(),
          endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(),
-         cryptocurrency: Cryptocurrency = .bitcoin,
-         currency: Currency = .euro) {
+         cryptocurrency: Cryptocurrency = .bitcoin) {
         
         self.networkService = networkService
         self.endpointProvider = endpointProvider
         self.cryptocurrency = cryptocurrency
-        self.currency = currency
     }
     
     @MainActor
-    func fetchMarketChartData() async {
+    func fetchHistoricaData(from date: String) async {
         cancelTask()
         
         state = .loading
         
-        let endpoint = endpointProvider.marketChartEndpoint(for: self.cryptocurrency.id, currency: Currency.euro.rawValue, days: "14")
+        let endpoint = endpointProvider.historicalDataEndpoint(for: self.cryptocurrency.id, date: date)
         currentTask = Task {
             do {
                 try Task.checkCancellation()
                 
-                let marketChart: MarketChart = try await networkService.fetch(from: endpoint)
+                let historicalData: HistoricalData = try await networkService.fetch(from: endpoint)
                 
                 try Task.checkCancellation()
                 
-                state = .success(marketChart)
+                state = .success(historicalData)
                 
             } catch is CancellationError {
                 return

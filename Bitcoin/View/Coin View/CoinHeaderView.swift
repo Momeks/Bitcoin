@@ -41,8 +41,8 @@ struct CoinHeaderView: View {
                             .foregroundStyle(.secondary)
                     }
                     
-                    if let eur = coin.marketData.currentPrice["eur"] {
-                        Text(eur.formatted(.currency(code: "eur")))
+                    if let eur = coin.marketData.currentPrice[Currency.euro.id] {
+                        Text(eur.formatted(.currency(code: Currency.euro.id)))
                             .font(.largeTitle)
                             .bold()
                     }

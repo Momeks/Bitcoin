@@ -22,7 +22,7 @@ struct MarketChartListView: View {
             case .success(let marketChart):
                 List {
                     ForEach(marketChart.toHistoricalPrices()) { price in
-                        NavigationLink(destination: Text(price.date.formatted())) {
+                        NavigationLink(destination: CoinDetailView(date: price.date)) {
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(price.date, style: .date)
                                     .bold()

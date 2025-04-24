@@ -13,13 +13,6 @@ enum CoinGeckoPath {
     case marketChart(id: String, currency: String, days: String)
     case historicalData(id: String, date: String)
     
-    var id: String {
-        switch self {
-        case .coin(let id), .marketChart(let id, _, _), .historicalData(id: let id, _):
-            return id
-        }
-    }
-    
     var path: String {
         switch self {
         case .coin(let id):
@@ -37,11 +30,11 @@ enum CoinGeckoPath {
             return []
         case .marketChart(_, let currency, let days):
             return [
-                URLQueryItem(name: "vs_currency", value: currency),
-                URLQueryItem(name: "days", value: days)
+                URLQueryItem(name: "vs_currency", value: currency), // eur
+                URLQueryItem(name: "days", value: days) /// 14
             ]
         case .historicalData(_, date: let date):
-            return [URLQueryItem(name: "date", value: date)] // Format: dd-mm-yyyy
+            return [URLQueryItem(name: "date", value: date)] /// date format dd-mm-yyyy
         }
     }
 }
@@ -49,10 +42,6 @@ enum CoinGeckoPath {
 struct CoinGeckoEndpoint: Endpoint {
     let pathType: CoinGeckoPath
     let apiKey: String
-    
-    var id: String {
-        pathType.id
-    }
     
     var baseURL: URL {
         URL(string: "https://api.coingecko.com/api/v3")!
