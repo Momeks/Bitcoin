@@ -7,6 +7,7 @@
 
 import Foundation
 import CoinKit
+import Combine
 import NetworkKit
 
 class CoinViewModel: ObservableObject {
@@ -20,16 +21,29 @@ class CoinViewModel: ObservableObject {
     @Published private(set) var state: ViewState = .idle
     private let networkService: NetworkService
     private let endpointProvider: EndpointProvider
+    private let refreshPublisher: RefreshPublisher
+    
     private var currentTask: Task<Void, Never>?
+    private var cancellables: Set<AnyCancellable> = []
     
     init(networkService: NetworkService = URLSessionNetworkService(),
-         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider()) {
+         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(),
+         refreshPublisher: RefreshPublisher = RefreshManager.shared) {
         self.networkService = networkService
         self.endpointProvider = endpointProvider
+        self.refreshPublisher = refreshPublisher
         
         Task {
             await fetchCoinData()
         }
+        
+        refreshPublisher.refresh
+            .sink { [weak self] in
+                Task {
+                    await self?.fetchCoinData()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     @MainActor
@@ -37,7 +51,7 @@ class CoinViewModel: ObservableObject {
         cancelTask()
         
         state = .loading
-            
+        
         let endpoint = endpointProvider.coinDetailsEndpoint(for: CryptoConfig.default)
         currentTask = Task {
             do {
