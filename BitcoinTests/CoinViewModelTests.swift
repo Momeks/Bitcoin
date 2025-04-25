@@ -15,7 +15,7 @@ final class CoinViewModelTests: XCTestCase {
     
     func testFetchCoinDataSuccess() async {
         let mockService = MockNetworkService()
-        mockService.mockData = Coin.preview
+        mockService.mockData = Coin.sample
         
         let viewModel = CoinViewModel(networkService: mockService)
         

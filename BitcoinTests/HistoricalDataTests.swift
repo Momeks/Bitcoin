@@ -15,7 +15,7 @@ final class HistoricalDataTests: XCTestCase {
     
     func testFetchHistoricalDataSuccess() async {
         let mockService = MockNetworkService()
-        mockService.mockData = HistoricalData.preview
+        mockService.mockData = HistoricalData.sample
         
         let viewModel = HistoricalDataViewModel(networkService: mockService)
         

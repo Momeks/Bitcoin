@@ -29,8 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7B4F96072DBA386B00B30200 /* CoinKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoinKit; sourceTree = "<group>"; };
-		7B4F960F2DBA49BD00B30200 /* NetworkKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkKit; sourceTree = "<group>"; };
+		7B83F2C72DBBAF2900497E64 /* CoinKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoinKit; sourceTree = "<group>"; };
+		7B83F2C82DBBAF2900497E64 /* NetworkKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkKit; sourceTree = "<group>"; };
 		7B9E02C12DBA21AB00079AB9 /* Bitcoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitcoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B9E02D12DBA21AD00079AB9 /* BitcoinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B9E02DB2DBA21AD00079AB9 /* BitcoinUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,8 +91,8 @@
 		7B9E02B82DBA21AB00079AB9 = {
 			isa = PBXGroup;
 			children = (
-				7B4F960F2DBA49BD00B30200 /* NetworkKit */,
-				7B4F96072DBA386B00B30200 /* CoinKit */,
+				7B83F2C72DBBAF2900497E64 /* CoinKit */,
+				7B83F2C82DBBAF2900497E64 /* NetworkKit */,
 				7B9E02C32DBA21AB00079AB9 /* Bitcoin */,
 				7B9E02D42DBA21AD00079AB9 /* BitcoinTests */,
 				7B9E02DE2DBA21AD00079AB9 /* BitcoinUITests */,
