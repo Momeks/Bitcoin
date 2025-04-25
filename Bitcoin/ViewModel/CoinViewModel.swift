@@ -29,6 +29,7 @@ class CoinViewModel: ObservableObject {
     init(networkService: NetworkService = URLSessionNetworkService(),
          endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(),
          refreshPublisher: RefreshPublisher = RefreshManager.shared) {
+        
         self.networkService = networkService
         self.endpointProvider = endpointProvider
         self.refreshPublisher = refreshPublisher
