@@ -20,20 +20,27 @@ struct MarketChartListView: View {
                 MarketChartLoadingView()
                 
             case .success(let marketChart):
-                List {
-                    ForEach(marketChart.toHistoricalPrices()) { price in
-                        NavigationLink(destination: CoinDetailView(date: price.date)) {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(price.date, style: .date)
-                                    .bold()
-                                    .foregroundStyle(.secondary)
-                                Text(price.price.formatted(.currency(code: Currency.euro.id)))
-                                    .bold()
+                Section {
+                    List {
+                        ForEach(marketChart.toHistoricalPrices()) { price in
+                            NavigationLink(destination: CoinDetailView(date: price.date)) {
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(price.date, style: .date)
+                                        .bold()
+                                        .foregroundStyle(.secondary)
+                                    Text(price.price.formatted(.currency(code: Currency.euro.id)))
+                                        .bold()
+                                }
                             }
                         }
                     }
+                    .listStyle(.plain)
+                } header: {
+                    Label("Last 14 Days", systemImage: "calendar")
+                        .fontWeight(.medium)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
                 }
-                .listStyle(.plain)
                 
             case .failure(let errorMessage):
                 ErrorView(errorMessage: errorMessage)

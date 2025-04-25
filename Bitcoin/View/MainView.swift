@@ -12,7 +12,7 @@ struct MainView: View {
         NavigationStack {
             VStack(spacing: 10) {
                 CoinHeaderView()
-                
+                Divider()
                 MarketChartListView()
             }
             .toolbar {
