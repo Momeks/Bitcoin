@@ -59,17 +59,8 @@ struct CoinHeaderView: View {
                 ErrorView(errorMessage: errorMessage)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .refreshData)) { _ in
-            refreshData()
-        }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
-    }
-    
-    private func refreshData() {
-        Task {
-            await viewModel.fetchCoinData()
-        }
     }
 }
 

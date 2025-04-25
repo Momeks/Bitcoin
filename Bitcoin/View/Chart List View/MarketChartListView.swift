@@ -46,6 +46,17 @@ struct MarketChartListView: View {
                 ErrorView(errorMessage: errorMessage)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .refreshData)) { _ in
+            refreshData()
+        }
+    }
+}
+
+extension MarketChartListView {
+    private func refreshData() {
+        Task {
+            await viewModel.fetchMarketChartData()
+        }
     }
 }
 
