@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7B4F960A2DBA389500B30200 /* CoinKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7B4F96092DBA389500B30200 /* CoinKit */; };
 		7B4F96112DBA49CE00B30200 /* NetworkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7B4F96102DBA49CE00B30200 /* NetworkKit */; };
+		7BFA73552DBBB876005FCFE1 /* CoinKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7BFA73542DBBB876005FCFE1 /* CoinKit */; };
+		7BFA73582DBBB897005FCFE1 /* NetworkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7BFA73572DBBB897005FCFE1 /* NetworkKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,8 +31,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7B83F2C72DBBAF2900497E64 /* CoinKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoinKit; sourceTree = "<group>"; };
-		7B83F2C82DBBAF2900497E64 /* NetworkKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkKit; sourceTree = "<group>"; };
 		7B9E02C12DBA21AB00079AB9 /* Bitcoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitcoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B9E02D12DBA21AD00079AB9 /* BitcoinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B9E02DB2DBA21AD00079AB9 /* BitcoinUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,6 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BFA73582DBBB897005FCFE1 /* NetworkKit in Frameworks */,
+				7BFA73552DBBB876005FCFE1 /* CoinKit in Frameworks */,
 				7B4F96112DBA49CE00B30200 /* NetworkKit in Frameworks */,
 				7B4F960A2DBA389500B30200 /* CoinKit in Frameworks */,
 			);
@@ -91,8 +93,6 @@
 		7B9E02B82DBA21AB00079AB9 = {
 			isa = PBXGroup;
 			children = (
-				7B83F2C72DBBAF2900497E64 /* CoinKit */,
-				7B83F2C82DBBAF2900497E64 /* NetworkKit */,
 				7B9E02C32DBA21AB00079AB9 /* Bitcoin */,
 				7B9E02D42DBA21AD00079AB9 /* BitcoinTests */,
 				7B9E02DE2DBA21AD00079AB9 /* BitcoinUITests */,
@@ -133,6 +133,8 @@
 			packageProductDependencies = (
 				7B4F96092DBA389500B30200 /* CoinKit */,
 				7B4F96102DBA49CE00B30200 /* NetworkKit */,
+				7BFA73542DBBB876005FCFE1 /* CoinKit */,
+				7BFA73572DBBB897005FCFE1 /* NetworkKit */,
 			);
 			productName = Bitcoin;
 			productReference = 7B9E02C12DBA21AB00079AB9 /* Bitcoin.app */;
@@ -217,6 +219,10 @@
 			);
 			mainGroup = 7B9E02B82DBA21AB00079AB9;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7BFA73532DBBB876005FCFE1 /* XCRemoteSwiftPackageReference "CoinKit" */,
+				7BFA73562DBBB897005FCFE1 /* XCRemoteSwiftPackageReference "NetworkKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7B9E02C22DBA21AB00079AB9 /* Products */;
 			projectDirPath = "";
@@ -590,6 +596,25 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		7BFA73532DBBB876005FCFE1 /* XCRemoteSwiftPackageReference "CoinKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Momeks/CoinKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		7BFA73562DBBB897005FCFE1 /* XCRemoteSwiftPackageReference "NetworkKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Momeks/NetworkKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		7B4F96092DBA389500B30200 /* CoinKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -597,6 +622,16 @@
 		};
 		7B4F96102DBA49CE00B30200 /* NetworkKit */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = NetworkKit;
+		};
+		7BFA73542DBBB876005FCFE1 /* CoinKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7BFA73532DBBB876005FCFE1 /* XCRemoteSwiftPackageReference "CoinKit" */;
+			productName = CoinKit;
+		};
+		7BFA73572DBBB897005FCFE1 /* NetworkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7BFA73562DBBB897005FCFE1 /* XCRemoteSwiftPackageReference "NetworkKit" */;
 			productName = NetworkKit;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -1,0 +1,24 @@
+{
+  "originHash" : "5c50aa514982ffac43528eb06e3d33cf843f2256b2d0baa0b6c95bb7cc91cfb1",
+  "pins" : [
+    {
+      "identity" : "coinkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Momeks/CoinKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "c307c49c124e163c1816b8fd4d7c8de3c0ed131c"
+      }
+    },
+    {
+      "identity" : "networkkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Momeks/NetworkKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "402e5877e99c503bbdf36d7ddd3b5a6245ad35be"
+      }
+    }
+  ],
+  "version" : 3
+}
