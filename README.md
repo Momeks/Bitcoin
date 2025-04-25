@@ -43,6 +43,10 @@ Tests are written pragmatically to ensure correctness while keeping test mainten
 #### 🔐 Security
 This project takes API key protection seriously by using Obfuscator to encode the API key, helping prevent static extraction from the app binary.
 
+#### 🔌 Data Source
+All Bitcoin price data in this app is fetched in real-time from the [CoinGecko API](https://api.coingecko.com/api/v3), a free and open cryptocurrency data provider. For more information about the available endpoints and usage, refer to the official documentation:  
+[https://docs.coingecko.com/v3.0.1/reference/coins-list](https://docs.coingecko.com/v3.0.1/reference/coins-list)
+
 ## 📦 Installation
 
 1. Clone the repository:

@@ -83,20 +83,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7B4F96082DBA389500B30200 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		7B9E02B82DBA21AB00079AB9 = {
 			isa = PBXGroup;
 			children = (
 				7B9E02C32DBA21AB00079AB9 /* Bitcoin */,
 				7B9E02D42DBA21AD00079AB9 /* BitcoinTests */,
 				7B9E02DE2DBA21AD00079AB9 /* BitcoinUITests */,
-				7B4F96082DBA389500B30200 /* Frameworks */,
 				7B9E02C22DBA21AB00079AB9 /* Products */,
 			);
 			sourceTree = "<group>";
