@@ -28,7 +28,7 @@ struct MarketChartListView: View {
                                     Text(price.date, style: .date)
                                         .bold()
                                         .foregroundStyle(.secondary)
-                                    Text(price.price.formatted(.currency(code: Currency.euro.id)))
+                                    Text(price.price.formatted(.currency(code: AppConfig.currency)))
                                         .bold()
                                 }
                             }

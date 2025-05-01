@@ -53,7 +53,7 @@ class CoinViewModel: ObservableObject {
         
         state = .loading
         
-        let endpoint = endpointProvider.coinDetailsEndpoint(for: CryptoConfig.default)
+        let endpoint = endpointProvider.coinDetailsEndpoint(for: AppConfig.coin)
         currentTask = Task {
             do {
                 try Task.checkCancellation()
@@ -74,9 +74,5 @@ class CoinViewModel: ObservableObject {
     private func cancelTask() {
         currentTask?.cancel()
         currentTask = nil
-    }
-    
-    deinit {
-        cancelTask()
     }
 }

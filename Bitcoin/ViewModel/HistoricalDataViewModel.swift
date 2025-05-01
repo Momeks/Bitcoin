@@ -34,7 +34,7 @@ class HistoricalDataViewModel: ObservableObject {
         
         state = .loading
         
-        let endpoint = endpointProvider.historicalDataEndpoint(for: CryptoConfig.default, date: date)
+        let endpoint = endpointProvider.historicalDataEndpoint(for: AppConfig.coin, date: date)
         currentTask = Task {
             do {
                 try Task.checkCancellation()
@@ -56,9 +56,5 @@ class HistoricalDataViewModel: ObservableObject {
     private func cancelTask() {
         currentTask?.cancel()
         currentTask = nil
-    }
-    
-    deinit {
-        cancelTask()
     }
 }

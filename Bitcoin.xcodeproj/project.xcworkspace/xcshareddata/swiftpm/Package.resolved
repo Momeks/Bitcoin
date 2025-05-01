@@ -7,7 +7,7 @@
       "location" : "https://github.com/Momeks/CoinKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "c307c49c124e163c1816b8fd4d7c8de3c0ed131c"
+        "revision" : "1e720f1408ee7c715db5336bfca1cc84bf45d9dd"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/Momeks/NetworkKit",
       "state" : {
         "branch" : "main",
-        "revision" : "402e5877e99c503bbdf36d7ddd3b5a6245ad35be"
+        "revision" : "9c7b6734c87839f78fd767a73938b0b5e182cad1"
       }
     }
   ],

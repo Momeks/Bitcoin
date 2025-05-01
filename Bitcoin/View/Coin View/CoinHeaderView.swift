@@ -41,11 +41,9 @@ struct CoinHeaderView: View {
                             .foregroundStyle(.secondary)
                     }
                     
-                    if let eur = coin.marketData.currentPrice[Currency.euro.id] {
-                        Text(eur.formatted(.currency(code: Currency.euro.id)))
-                            .font(.largeTitle)
-                            .bold()
-                    }
+                    Text(coin.toCurrencyString(for: AppConfig.currency))
+                        .font(.largeTitle)
+                        .bold()
                     
                     PriceChangeView(change: coin.marketData.priceChange24H,
                                     percentage: coin.marketData.priceChangePercentage24H)

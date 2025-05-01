@@ -41,7 +41,7 @@ class MarketChartViewModel: ObservableObject {
         
         state = .loading
         
-        let endpoint = endpointProvider.marketChartEndpoint(for: CryptoConfig.default, currency: Currency.euro.rawValue, days: "14")
+        let endpoint = endpointProvider.marketChartEndpoint(for: AppConfig.coin, currency: AppConfig.currency, days: "14")
         currentTask = Task {
             do {
                 try Task.checkCancellation()
@@ -63,9 +63,5 @@ class MarketChartViewModel: ObservableObject {
     private func cancelTask() {
         currentTask?.cancel()
         currentTask = nil
-    }
-    
-    deinit {
-        cancelTask()
     }
 }
