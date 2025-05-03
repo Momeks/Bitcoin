@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Combine
 
 @testable import Bitcoin
 @testable import CoinKit
@@ -13,37 +14,56 @@ import XCTest
 
 final class CoinViewModelTests: XCTestCase {
     
-    func testFetchCoinDataSuccess() async {
+    func testFetchCoinDataSuccess() async throws {
         let mockService = MockNetworkService()
         mockService.mockData = Coin.sample
         
         let viewModel = CoinViewModel(networkService: mockService)
         
-        try? await Task.sleep(nanoseconds: 500_000_000)
+        let expectation = XCTestExpectation(description: "Wait for state update")
+        var cancellables = Set<AnyCancellable>()
         
-        if case let .success(coin) = viewModel.state {
-            XCTAssertEqual(coin.id, "bitcoin")
-            XCTAssertEqual(coin.symbol, "btc")
-            XCTAssertEqual(coin.marketData.currentPrice["usd"], 62842.56)
-        } else {
-            XCTFail("Expected success state but got \(viewModel.state)")
-        }
+        viewModel.$state
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { state in
+                if case let .success(coin) = state {
+                    XCTAssertEqual(coin.id, "bitcoin")
+                    XCTAssertEqual(coin.symbol, "btc")
+                    XCTAssertEqual(coin.marketData.currentPrice["usd"], 62842.56)
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Expected success state but got \(state)")
+                }
+            }
+            .store(in: &cancellables)
+        
+        await fulfillment(of: [expectation], timeout: 2.0)
     }
-
+    
     func testFetchCoinDataFailure() async {
         let mockService = MockNetworkService()
         mockService.shouldThrowError = true
         mockService.errorToThrow = .invalidResponse
-
+        
         let viewModel = CoinViewModel(networkService: mockService)
         
-        try? await Task.sleep(nanoseconds: 500_000_000)
-
-        if case let .failure(message) = viewModel.state {
-            XCTAssertTrue(message.contains("Invalid response received from the server"))
-        } else {
-            XCTFail("Expected failure state but got \(viewModel.state)")
-        }
+        let expectation = XCTestExpectation(description: "Wait for failure state")
+        var cancellables = Set<AnyCancellable>()
+        
+        viewModel.$state
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { state in
+                if case let .failure(message) = state {
+                    XCTAssertTrue(message.contains("Invalid response received from the server"))
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Expected failure state but got \(state)")
+                }
+            }
+            .store(in: &cancellables)
+        
+        await fulfillment(of: [expectation], timeout: 2.0)
     }
 }
-

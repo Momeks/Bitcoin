@@ -6,12 +6,20 @@
 //
 
 import XCTest
+import Combine
 
 @testable import Bitcoin
 @testable import CoinKit
 @testable import NetworkKit
 
 final class HistoricalDataTests: XCTestCase {
+    private var formattedDate: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        return dateFormatter.string(from: Date())
+    }
+    
+    private var cancellables = Set<AnyCancellable>()
     
     func testFetchHistoricalDataSuccess() async {
         let mockService = MockNetworkService()
@@ -19,16 +27,28 @@ final class HistoricalDataTests: XCTestCase {
         
         let viewModel = HistoricalDataViewModel(networkService: mockService)
         
-        await viewModel.fetchHistoricalData(from: "24-04-2025")
+        let expectation = XCTestExpectation(description: "Wait for success state")
         
-        try? await Task.sleep(nanoseconds: 300_000_000)
+        viewModel.$state
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .first {
+                guard case .success = $0 else { return false }
+                return true
+            }
+            .sink { state in
+                if case let .success(data) = state {
+                    XCTAssertEqual(data.id, "bitcoin")
+                    XCTAssertEqual(data.marketData!.currentPrice["usd"], 93605.45)
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Expected .success but got \(state)")
+                }
+            }
+            .store(in: &cancellables)
         
-        if case let .success(data) = viewModel.state {
-            XCTAssertEqual(data.id, "bitcoin")
-            XCTAssertEqual(data.marketData!.currentPrice["usd"], 93605.45)
-        } else {
-            XCTFail("Expected .success but got \(viewModel.state)")
-        }
+        await viewModel.fetchHistoricalData(from: formattedDate)
+        await fulfillment(of: [expectation], timeout: 3.0)
     }
     
     func testFetchHistoricalDataFailure() async {
@@ -38,14 +58,26 @@ final class HistoricalDataTests: XCTestCase {
         
         let viewModel = HistoricalDataViewModel(networkService: mockService)
         
-        await viewModel.fetchHistoricalData(from: "24-04-2025")
+        let expectation = XCTestExpectation(description: "Wait for failure state")
         
-        try? await Task.sleep(nanoseconds: 300_000_000)
+        viewModel.$state
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .first {
+                guard case .failure = $0 else { return false }
+                return true
+            }
+            .sink { state in
+                if case let .failure(message) = state {
+                    XCTAssertTrue(message.contains("Invalid response received from the server"))
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Expected .failure but got \(state)")
+                }
+            }
+            .store(in: &cancellables)
         
-        if case let .failure(message) = viewModel.state {
-            XCTAssertTrue(message.contains("Invalid response received from the server"))
-        } else {
-            XCTFail("Expected .failure but got \(viewModel.state)")
-        }
+        await viewModel.fetchHistoricalData(from: formattedDate)
+        await fulfillment(of: [expectation], timeout: 3.0)
     }
 }

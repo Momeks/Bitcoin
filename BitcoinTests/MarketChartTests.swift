@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Combine
 
 @testable import Bitcoin
 @testable import CoinKit
@@ -18,9 +19,8 @@ final class MarketChartTests: XCTestCase {
         
         XCTAssertEqual(list.count, 14, "Expected 14 items in sample list")
         
-        for i in 1..<list.count {
-            XCTAssertLessThanOrEqual(list[i - 1].date, list[i].date, "Dates should be sorted in ascending order")
-        }
+        let isSorted = zip(list, list.dropFirst()).allSatisfy { $0.date <= $1.date }
+        XCTAssertTrue(isSorted, "Dates should be sorted in ascending order")
     }
     
     func testFetchMarketChartSuccess() async {
@@ -28,7 +28,7 @@ final class MarketChartTests: XCTestCase {
         
         let samplePrices = HistoricalPrice.sampleList
         let doublePrices: [[Double]] = samplePrices.map {
-            [ $0.date.timeIntervalSince1970 * 1000, $0.price ]
+            [ $0.date.timeIntervalSince1970 * 1000, $0.price]
         }
         
         let marketChart = MarketChart(prices: doublePrices)
@@ -36,13 +36,23 @@ final class MarketChartTests: XCTestCase {
         
         let viewModel = MarketChartViewModel(networkService: mockService)
         
-        try? await Task.sleep(nanoseconds: 300_000_000)
+        let expectation = XCTestExpectation(description: "Wait for success state")
+        var cancellables = Set<AnyCancellable>()
         
-        if case let .success(chart) = viewModel.state {
-            XCTAssertEqual(chart.prices.count, 14)
-            XCTAssertTrue(chart.prices.first![1] >= 70000)
-        } else {
-            XCTFail("Expected success state but got \(viewModel.state)")
-        }
+        viewModel.$state
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { state in
+                if case let .success(chart) = state {
+                    XCTAssertEqual(chart.prices.count, 14)
+                    XCTAssertTrue(chart.prices.first![1] >= 70000)
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Expected success state but got \(state)")
+                }
+            }
+            .store(in: &cancellables)
+        
+        await fulfillment(of: [expectation], timeout: 3.0)
     }
 }
