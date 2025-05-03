@@ -13,6 +13,7 @@ import Combine
 @testable import NetworkKit
 
 final class MarketChartTests: XCTestCase {
+    private var cancellables = Set<AnyCancellable>()
     
     func testMarketChartsForTwoWeeks() {
         let list = HistoricalPrice.sampleList
@@ -37,7 +38,6 @@ final class MarketChartTests: XCTestCase {
         let viewModel = MarketChartViewModel(networkService: mockService)
         
         let expectation = XCTestExpectation(description: "Wait for success state")
-        var cancellables = Set<AnyCancellable>()
         
         viewModel.$state
             .dropFirst()
