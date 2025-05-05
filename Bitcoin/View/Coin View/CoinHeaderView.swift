@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoinKit
 
 struct CoinHeaderView: View {
     @ObservedObject var viewModel: CoinViewModel

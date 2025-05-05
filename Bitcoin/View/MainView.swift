@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct MainView: View {
-    private let coinViewModel = CoinViewModel()
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 10) {
-                CoinHeaderView(viewModel: coinViewModel)
+                CoinHeaderView()
                 Divider()
                 MarketChartListView()
             }

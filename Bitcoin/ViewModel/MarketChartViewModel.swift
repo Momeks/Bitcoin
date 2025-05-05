@@ -9,11 +9,17 @@ import Foundation
 import CoinKit
 import NetworkKit
 
-class MarketChartViewModel: ObservableObject {
+protocol MarketChartProtocol: ObservableObject {
+    var state: MarketChartViewModel.ViewState { get }
+    func fetchMarketChartData() async
+    func refreshData()
+}
+
+class MarketChartViewModel: MarketChartProtocol {
     enum ViewState {
         case idle
         case loading
-        case success(MarketChart)
+        case success([MarketChartDisplayData])
         case failure(String)
     }
     
@@ -50,18 +56,35 @@ class MarketChartViewModel: ObservableObject {
                 
                 try Task.checkCancellation()
                 
-                state = .success(marketChart)
+                state = .success(makeDisplayData(from: marketChart))
                 
             } catch is CancellationError {
                 return
+            } catch let error as NetworkError {
+                state = .failure(error.userMessage)
             } catch {
                 state = .failure(error.localizedDescription)
             }
         }
     }
     
+    func refreshData() {
+        Task {
+            await fetchMarketChartData()
+        }
+    }
+    
     private func cancelTask() {
         currentTask?.cancel()
         currentTask = nil
+    }
+    
+    private func makeDisplayData(from chart: MarketChart) -> [MarketChartDisplayData] {
+        chart.toHistoricalPrices().map {
+            MarketChartDisplayData(
+                dateText: $0.date.formatted(date: .abbreviated, time: .omitted),
+                priceText: $0.price.formatted(.currency(code: AppConfig.currency))
+            )
+        }
     }
 }
