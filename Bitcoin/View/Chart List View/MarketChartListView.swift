@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct MarketChartListView: View {
-    @StateObject private var viewModel = MarketChartViewModel()
+    @ObservedObject private var viewModel: MarketChartViewModel
+    
+    init(viewModel: MarketChartViewModel = MarketChartViewModel()) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack {
@@ -19,16 +23,16 @@ struct MarketChartListView: View {
             case .loading:
                 MarketChartLoadingView()
                 
-            case .success(let marketChart):
+            case .success(let chartDataList):
                 Section {
                     List {
-                        ForEach(marketChart.toHistoricalPrices()) { price in
-                            NavigationLink(destination: CoinDetailView(date: price.date)) {
+                        ForEach(chartDataList) { data in
+                            NavigationLink(destination: CoinDetailView(date: parseDate(from: data.dateText))) {
                                 VStack(alignment: .leading, spacing: 5) {
-                                    Text(price.date, style: .date)
+                                    Text(data.dateText)
                                         .bold()
                                         .foregroundStyle(.secondary)
-                                    Text(price.price.formatted(.currency(code: AppConfig.currency)))
+                                    Text(data.priceText)
                                         .bold()
                                 }
                             }
@@ -47,16 +51,17 @@ struct MarketChartListView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .refreshData)) { _ in
-            refreshData()
+            viewModel.refreshData()
         }
     }
 }
 
 extension MarketChartListView {
-    private func refreshData() {
-        Task {
-            await viewModel.fetchMarketChartData()
-        }
+    private func parseDate(from dateString: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.date(from: dateString) ?? Date()
     }
 }
 

@@ -9,8 +9,13 @@ import SwiftUI
 
 struct CoinDetailView: View {
     var date: Date
-    @StateObject private var viewModel = HistoricalDataViewModel()
-    private  let currencies: [Currency] = [.euro, .usd, .pound]
+    @ObservedObject private var viewModel: HistoricalDataViewModel
+    private let currencies: [Currency] = [.euro, .usd, .pound]
+    
+    init(date: Date, viewModel: HistoricalDataViewModel = HistoricalDataViewModel()) {
+        self.date = date
+        self.viewModel = viewModel
+    }
     
     private var formattedDate: String {
         let dateFormatter = DateFormatter()
@@ -33,12 +38,17 @@ struct CoinDetailView: View {
             case .loading:
                 CoinDetailLoading()
                 
-            case .success(let coin):
-                if let currentPrice = coin.marketData?.currentPrice, !currentPrice.isEmpty {
+            case .failure(let errorMessage):
+                ErrorView(errorMessage: errorMessage)
+                
+            case .success(let displayData):
+                if displayData.pricesByCurrency.isEmpty {
+                    ErrorView(errorMessage: "No price data available for this date.")
+                } else {
                     NavigationStack {
                         List {
                             ForEach(currencies, id: \.self) { currency in
-                                if let price = currentPrice[currency.id] {
+                                if let price = displayData.pricesByCurrency[currency] {
                                     CurrencyView(currency: currency, price: price)
                                 }
                             }
@@ -46,12 +56,7 @@ struct CoinDetailView: View {
                         .listStyle(.plain)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                } else {
-                    ErrorView(errorMessage: "No price data available for this date.")
                 }
-                
-            case .failure(let errorMessage):
-                ErrorView(errorMessage: errorMessage)
             }
         }
         .navigationTitle(titleDate)
@@ -61,8 +66,4 @@ struct CoinDetailView: View {
             await viewModel.fetchHistoricalData(from: formattedDate)
         }
     }
-}
-
-#Preview {
-    CoinDetailView(date: Date())
 }

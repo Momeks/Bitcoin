@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CurrencyView: View {
     var currency: Currency
-    var price: Double
+    var price: String
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -22,7 +22,7 @@ struct CurrencyView: View {
                     .fontWeight(.medium)
             }
             
-            Text(price.formatted(.currency(code: currency.id)))
+            Text(price)
                 .bold()
                 .font(.title3)
                 .foregroundStyle(.secondary)
@@ -32,5 +32,5 @@ struct CurrencyView: View {
 }
 
 #Preview {
-    CurrencyView(currency: .euro, price: 87932.20)
+    CurrencyView(currency: .euro, price: "87932.20")
 }
