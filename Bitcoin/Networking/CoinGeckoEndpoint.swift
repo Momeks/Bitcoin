@@ -12,6 +12,7 @@ enum CoinGeckoPath {
     case coin(id: String)
     case marketChart(id: String, currency: String, days: String)
     case historicalData(id: String, date: String)
+    case custom(path: String, query: [URLQueryItem])
     
     var path: String {
         switch self {
@@ -21,6 +22,8 @@ enum CoinGeckoPath {
             return "coins/\(id)/market_chart"
         case .historicalData(let id, _):
             return "coins/\(id)/history"
+        case .custom(path: let path, _):
+            return path
         }
     }
     
@@ -35,6 +38,8 @@ enum CoinGeckoPath {
             ]
         case .historicalData(_, date: let date):
             return [URLQueryItem(name: "date", value: date)] /// date format: dd-MM-yyyy
+        case .custom (_, query: let query):
+            return query
         }
     }
 }

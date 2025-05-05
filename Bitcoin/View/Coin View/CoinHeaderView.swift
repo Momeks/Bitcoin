@@ -68,5 +68,5 @@ struct CoinHeaderView: View {
 }
 
 #Preview {
-    CoinHeaderView(viewModel: CoinViewModel())
+    CoinHeaderView()
 }

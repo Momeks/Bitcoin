@@ -39,7 +39,7 @@ class HistoricalDataViewModel: HistoricalDataProtocol {
         
         state = .loading
         
-        let endpoint = endpointProvider.historicalDataEndpoint(for: AppConfig.coin, date: date)
+        let endpoint = endpointProvider.endpoint(for: .historicalData(id: AppConfig.coin, date: date))
         currentTask = Task {
             do {
                 try Task.checkCancellation()

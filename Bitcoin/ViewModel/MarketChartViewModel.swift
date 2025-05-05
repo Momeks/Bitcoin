@@ -47,7 +47,7 @@ class MarketChartViewModel: MarketChartProtocol {
         
         state = .loading
         
-        let endpoint = endpointProvider.marketChartEndpoint(for: AppConfig.coin, currency: AppConfig.currency, days: "14")
+        let endpoint = endpointProvider.endpoint(for: .marketChart(id: AppConfig.coin, currency: AppConfig.currency, days: "14"))
         currentTask = Task {
             do {
                 try Task.checkCancellation()

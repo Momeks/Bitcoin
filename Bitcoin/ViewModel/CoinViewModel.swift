@@ -58,7 +58,7 @@ class CoinViewModel: CoinViewModelProtocol {
         
         state = .loading
         
-        let endpoint = endpointProvider.coinDetailsEndpoint(for: AppConfig.coin)
+        let endpoint = endpointProvider.endpoint(for: .coin(id: AppConfig.coin))
         currentTask = Task {
             do {
                 try Task.checkCancellation()
