@@ -12,7 +12,7 @@ struct CoinDetailLoading: View {
     
     var body: some View {
         List(0..<3) { _ in
-            CurrencyView(currency: .usd, price: 99999.99)
+            CurrencyView(currency: .usd, price: "99999.99")
         }
         .listStyle(.plain)
         .redacted(reason: .placeholder)
