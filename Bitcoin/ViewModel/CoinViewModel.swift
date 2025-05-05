@@ -10,11 +10,16 @@ import CoinKit
 import Combine
 import NetworkKit
 
-class CoinViewModel: ObservableObject {
+protocol CoinViewModelProtocol: ObservableObject {
+    var state: CoinViewModel.ViewState { get }
+    func fetchCoinData() async
+}
+
+class CoinViewModel: CoinViewModelProtocol {
     enum ViewState {
         case idle
         case loading
-        case success(Coin)
+        case success(CoinDisplayData)
         case failure(String)
     }
     
@@ -62,9 +67,11 @@ class CoinViewModel: ObservableObject {
                 
                 try Task.checkCancellation()
                 
-                state = .success(coin)
+                state = .success(makeDisplayData(from: coin))
             } catch is CancellationError {
                 return
+            } catch let error as NetworkError {
+                state = .failure(error.userMessage)
             } catch {
                 state = .failure(error.localizedDescription)
             }
@@ -74,5 +81,17 @@ class CoinViewModel: ObservableObject {
     private func cancelTask() {
         currentTask?.cancel()
         currentTask = nil
+    }
+    
+    private func makeDisplayData(from coin: Coin) -> CoinDisplayData {
+        return CoinDisplayData(
+            name: coin.name,
+            symbol: coin.symbol.uppercased(),
+            imageUrl: URL(string: coin.image.large),
+            priceText: coin.toCurrencyString(for: AppConfig.currency),
+            priceChangeText: String(format: "%+.2f (%.2f%%)", coin.marketData.priceChange24H, coin.marketData.priceChangePercentage24H),
+            priceChangeColor: coin.marketData.priceChange24H >= 0 ? .green : .red,
+            lastUpdatedText: coin.toDateString()
+        )
     }
 }

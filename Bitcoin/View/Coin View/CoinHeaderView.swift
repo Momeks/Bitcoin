@@ -9,7 +9,11 @@ import SwiftUI
 import CoinKit
 
 struct CoinHeaderView: View {
-    @StateObject private var viewModel = CoinViewModel()
+    @ObservedObject var viewModel: CoinViewModel
+    
+    init(viewModel: CoinViewModel = CoinViewModel()) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,10 +24,10 @@ struct CoinHeaderView: View {
             case .loading:
                 LoadingHeaderView()
                 
-            case .success(let coin):
+            case .success(let displayData):
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 10) {
-                        AsyncImage(url: URL(string: coin.image.large)) { image in
+                        AsyncImage(url: displayData.imageUrl) { image in
                             image
                                 .resizable()
                                 .scaledToFit()
@@ -32,23 +36,25 @@ struct CoinHeaderView: View {
                             ProgressView()
                         }
                         
-                        Text(coin.name)
+                        Text(displayData.name)
                             .font(.largeTitle)
                             .bold()
                         
-                        Text(coin.symbol)
+                        Text(displayData.symbol)
                             .font(.title3)
                             .foregroundStyle(.secondary)
                     }
                     
-                    Text(coin.toCurrencyString(for: AppConfig.currency))
+                    Text(displayData.priceText)
                         .font(.largeTitle)
                         .bold()
                     
-                    PriceChangeView(change: coin.marketData.priceChange24H,
-                                    percentage: coin.marketData.priceChangePercentage24H)
+                    Text(displayData.priceChangeText)
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(displayData.priceChangeColor)
                     
-                    Text("Last Updated: \(coin.toDateString())")
+                    Text("Last Updated: \(displayData.lastUpdatedText)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -62,21 +68,6 @@ struct CoinHeaderView: View {
     }
 }
 
-struct PriceChangeView: View {
-    let change: Double
-    let percentage: Double
-    
-    var body: some View {
-        let formattedChange = String(format: "%+.2f", change)
-        let formattedPercent = String(format: "%.2f", percentage)
-        
-        return Text("\(formattedChange) (\(formattedPercent)%)")
-            .font(.title3)
-            .bold()
-            .foregroundColor(change >= 0 ? .green : .red)
-    }
-}
-
 #Preview {
-    CoinHeaderView()
+    CoinHeaderView(viewModel: CoinViewModel())
 }
