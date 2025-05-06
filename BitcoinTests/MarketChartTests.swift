@@ -13,9 +13,15 @@ import Combine
 @testable import NetworkKit
 
 final class MarketChartTests: XCTestCase {
-    private var cancellables = Set<AnyCancellable>()
+    private var cancellables: Set<AnyCancellable>!
+    private var mockService: MockNetworkService!
     
-    func testMarketChartsForTwoWeeks() {
+    override func setUp() {
+        mockService = MockNetworkService()
+        cancellables = []
+    }
+    
+    func test_MarketCharts_ForTwoWeeks() {
         let list = HistoricalPrice.sampleList
         
         XCTAssertEqual(list.count, 14, "Expected 14 items in sample list")
@@ -24,12 +30,10 @@ final class MarketChartTests: XCTestCase {
         XCTAssertTrue(isSorted, "Dates should be sorted in ascending order")
     }
     
-    func testFetchMarketChartSuccess() async {
-        let mockService = MockNetworkService()
-        
+    func test_FetchMarketChart_Success() async {
         let samplePrices = HistoricalPrice.sampleList
         let doublePrices: [[Double]] = samplePrices.map {
-            [ $0.date.timeIntervalSince1970 * 1000, $0.price]
+            [$0.date.timeIntervalSince1970 * 1000, $0.price]
         }
         
         let marketChart = MarketChart(prices: doublePrices)
@@ -41,11 +45,9 @@ final class MarketChartTests: XCTestCase {
         
         viewModel.$state
             .dropFirst()
-            .receive(on: DispatchQueue.main)
             .sink { state in
                 if case let .success(chart) = state {
-                    XCTAssertEqual(chart.prices.count, 14)
-                    XCTAssertTrue(chart.prices.first![1] >= 70000)
+                    XCTAssertEqual(chart.count, 14)
                     expectation.fulfill()
                 } else {
                     XCTFail("Expected success state but got \(state)")
@@ -54,5 +56,15 @@ final class MarketChartTests: XCTestCase {
             .store(in: &cancellables)
         
         await fulfillment(of: [expectation], timeout: 3.0)
+    }
+    
+    func test_PriceText_IsCurrencyFormatted() {
+        let sample = MarketChartDisplayData.sample
+        XCTAssertTrue(sample.priceText.contains("$") || sample.priceText.contains("€"), "Price should include a currency symbol")
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        mockService = nil
     }
 }

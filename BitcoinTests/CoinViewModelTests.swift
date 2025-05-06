@@ -13,11 +13,12 @@ import Combine
 @testable import NetworkKit
 
 final class CoinViewModelTests: XCTestCase {
-    private var cancellables: Set<AnyCancellable> = []
     private var mockService: MockNetworkService!
+    private var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
         mockService = MockNetworkService()
+        cancellables = []
     }
     
     func test_FetchCoinData_Success() async throws {
@@ -58,10 +59,11 @@ final class CoinViewModelTests: XCTestCase {
             }
             .store(in: &cancellables)
         
-        await fulfillment(of: [expectation], timeout: 3)
+        await fulfillment(of: [expectation], timeout: 3.0)
     }
     
     override func tearDown() {
         super.tearDown()
+        mockService = nil
     }
 }

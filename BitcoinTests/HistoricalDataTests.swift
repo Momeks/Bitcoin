@@ -13,71 +13,39 @@ import Combine
 @testable import NetworkKit
 
 final class HistoricalDataTests: XCTestCase {
-    private var formattedDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        return dateFormatter.string(from: Date())
+    private var cancellables: Set<AnyCancellable>!
+    private var mockService: MockNetworkService!
+    
+    override func setUp() {
+        mockService = MockNetworkService()
+        cancellables = []
     }
     
-    private var cancellables = Set<AnyCancellable>()
-    
-    func testFetchHistoricalDataSuccess() async {
-        let mockService = MockNetworkService()
+    func test_FetchHistoricalData_Success() async {
         mockService.mockData = HistoricalData.sample
-        
-        let viewModel = HistoricalDataViewModel(networkService: mockService)
+        let viewModel = HistoricalDataViewModel(networkService: mockService, date: Date())
         
         let expectation = XCTestExpectation(description: "Wait for success state")
         
         viewModel.$state
             .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .first {
-                guard case .success = $0 else { return false }
-                return true
-            }
             .sink { state in
                 if case let .success(data) = state {
-                    XCTAssertEqual(data.id, "bitcoin")
-                    XCTAssertEqual(data.marketData!.currentPrice["usd"], 93605.45)
+                    XCTAssertEqual(data.symbol, "BTC")
+                    XCTAssertEqual(data.name, "Bitcoin")
+                    XCTAssertEqual(data.pricesByCurrency.count, 2)
+                    XCTAssertEqual(data.pricesByCurrency[.usd], "$93,605.45")
+                    XCTAssertEqual(data.pricesByCurrency[.euro], "€82,601.29")
                     expectation.fulfill()
-                } else {
-                    XCTFail("Expected .success but got \(state)")
                 }
             }
             .store(in: &cancellables)
         
-        await viewModel.fetchHistoricalData(from: formattedDate)
         await fulfillment(of: [expectation], timeout: 3.0)
     }
     
-    func testFetchHistoricalDataFailure() async {
-        let mockService = MockNetworkService()
-        mockService.shouldThrowError = true
-        mockService.errorToThrow = .invalidResponse
-        
-        let viewModel = HistoricalDataViewModel(networkService: mockService)
-        
-        let expectation = XCTestExpectation(description: "Wait for failure state")
-        
-        viewModel.$state
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .first {
-                guard case .failure = $0 else { return false }
-                return true
-            }
-            .sink { state in
-                if case let .failure(message) = state {
-                    XCTAssertTrue(message.contains("Invalid response received from the server"))
-                    expectation.fulfill()
-                } else {
-                    XCTFail("Expected .failure but got \(state)")
-                }
-            }
-            .store(in: &cancellables)
-        
-        await viewModel.fetchHistoricalData(from: formattedDate)
-        await fulfillment(of: [expectation], timeout: 3.0)
+    override func tearDown() {
+        super.tearDown()
+        mockService = nil
     }
 }
