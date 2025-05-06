@@ -19,7 +19,7 @@ struct MainView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("refresh", systemImage: "arrow.clockwise") {
-                        NotificationCenter.default.post(name: .refreshData, object: nil)
+                        NotificationCenter.default.post(name: .onRefreshData, object: nil)
                     }
                 }
             }

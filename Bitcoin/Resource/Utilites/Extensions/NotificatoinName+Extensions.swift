@@ -8,5 +8,5 @@
 import Foundation
 
 extension Notification.Name {
-    static let refreshData = Notification.Name("refreshData")
+    static let onRefreshData = Notification.Name("refreshData")
 }

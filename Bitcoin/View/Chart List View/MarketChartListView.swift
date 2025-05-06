@@ -48,7 +48,7 @@ struct MarketChartListView<ViewModel: MarketChartProtocol>: View {
                 ErrorView(errorMessage: errorMessage)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .refreshData)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .onRefreshData)) { _ in
             viewModel.refreshData()
         }
     }
