@@ -7,12 +7,8 @@
 
 import SwiftUI
 
-struct MarketChartListView: View {
-    @ObservedObject private var viewModel: MarketChartViewModel
-    
-    init(viewModel: MarketChartViewModel = MarketChartViewModel()) {
-        self.viewModel = viewModel
-    }
+struct MarketChartListView<ViewModel: MarketChartProtocol>: View {
+    @StateObject var viewModel: ViewModel
     
     var body: some View {
         VStack {
@@ -27,7 +23,9 @@ struct MarketChartListView: View {
                 Section {
                     List {
                         ForEach(chartDataList) { data in
-                            NavigationLink(destination: CoinDetailView(date: parseDate(from: data.dateText))) {
+                            NavigationLink(destination: CoinDetailView(
+                                viewModel: HistoricalDataViewModel(date: data.dateText.toDate() ?? Date()))
+                            ) {
                                 VStack(alignment: .leading, spacing: 5) {
                                     Text(data.dateText)
                                         .bold()
@@ -56,15 +54,6 @@ struct MarketChartListView: View {
     }
 }
 
-extension MarketChartListView {
-    private func parseDate(from dateString: String) -> Date {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.date(from: dateString) ?? Date()
-    }
-}
-
 #Preview {
-    MarketChartListView()
+    MarketChartListView(viewModel: MarketChartViewModel())
 }

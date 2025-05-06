@@ -7,27 +7,8 @@
 
 import SwiftUI
 
-struct CoinDetailView: View {
-    var date: Date
-    @ObservedObject private var viewModel: HistoricalDataViewModel
-    private let currencies: [Currency] = [.euro, .usd, .pound]
-    
-    init(date: Date, viewModel: HistoricalDataViewModel = HistoricalDataViewModel()) {
-        self.date = date
-        self.viewModel = viewModel
-    }
-    
-    private var formattedDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        return dateFormatter.string(from: date)
-    }
-    
-    private var titleDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        return dateFormatter.string(from: date)
-    }
+struct CoinDetailView<ViewModel: HistoricalDataProtocol>: View {
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         VStack {
@@ -47,7 +28,7 @@ struct CoinDetailView: View {
                 } else {
                     NavigationStack {
                         List {
-                            ForEach(currencies, id: \.self) { currency in
+                            ForEach(viewModel.availableCurrencies, id: \.self) { currency in
                                 if let price = displayData.pricesByCurrency[currency] {
                                     CurrencyView(currency: currency, price: price)
                                 }
@@ -59,11 +40,8 @@ struct CoinDetailView: View {
                 }
             }
         }
-        .navigationTitle(titleDate)
+        .navigationTitle(viewModel.navigationTitle)
         .navigationBarTitleDisplayMode(.large)
         .toolbarRole(.editor)
-        .task {
-            await viewModel.fetchHistoricalData(from: formattedDate)
-        }
     }
 }

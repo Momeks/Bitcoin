@@ -11,10 +11,16 @@ import NetworkKit
 
 protocol HistoricalDataProtocol: ObservableObject {
     var state: HistoricalDataViewModel.ViewState { get }
-    func fetchHistoricalData(from date: String) async
+    var navigationTitle: String { get }
+    var availableCurrencies: [Currency] { get }
+    func fetchHistoricalData() async
 }
 
 class HistoricalDataViewModel: HistoricalDataProtocol {
+    var date: Date
+    var navigationTitle: String { date.navigationTitleFormattedDate() }
+    var availableCurrencies: [Currency] { [.euro, .usd, .pound] }
+    
     enum ViewState {
         case idle
         case loading
@@ -28,18 +34,24 @@ class HistoricalDataViewModel: HistoricalDataProtocol {
     private var currentTask: Task<Void, Never>?
     
     init(networkService: NetworkService = URLSessionNetworkService(),
-         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider()) {
+         endpointProvider: EndpointProvider = CoinGeckoEndpointProvider(), date: Date) {
         self.networkService = networkService
         self.endpointProvider = endpointProvider
+        self.date = date
+        
+        Task {
+            await fetchHistoricalData()
+        }
     }
     
     @MainActor
-    func fetchHistoricalData(from date: String) async {
+    func fetchHistoricalData() async {
         cancelTask()
         
         state = .loading
         
-        let endpoint = endpointProvider.endpoint(for: .historicalData(id: AppConfig.coin, date: date))
+        let endpoint = endpointProvider.endpoint(for: .historicalData(id: AppConfig.coin, date: date.coinGeckoFormattedDate()))
+        
         currentTask = Task {
             do {
                 try Task.checkCancellation()

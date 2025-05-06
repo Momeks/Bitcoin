@@ -12,9 +12,9 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 10) {
-                CoinHeaderView()
+                CoinHeaderView(viewModel: CoinViewModel())
                 Divider()
-                MarketChartListView()
+                MarketChartListView(viewModel: MarketChartViewModel())
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
