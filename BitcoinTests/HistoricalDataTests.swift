@@ -5,18 +5,19 @@
 //  Created by Mohammad Komeili on 4/25/25.
 //
 
-import XCTest
+import CoinKit
 import Combine
+import NetworkKit
+import XCTest
 
 @testable import Bitcoin
-@testable import CoinKit
-@testable import NetworkKit
 
 final class HistoricalDataTests: XCTestCase {
     private var cancellables: Set<AnyCancellable>!
     private var mockService: MockNetworkService!
     
     override func setUp() {
+        super.setUp()
         mockService = MockNetworkService()
         cancellables = []
     }
