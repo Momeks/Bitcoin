@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LoadingHeaderView: View {
+struct CoinHeaderLoadingView: View {
     @State private var isLoading = false
     
     var body: some View {
@@ -47,5 +47,5 @@ struct LoadingHeaderView: View {
 }
 
 #Preview {
-    LoadingHeaderView()
+    CoinHeaderLoadingView()
 }

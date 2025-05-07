@@ -17,7 +17,7 @@ struct CoinHeaderView<ViewModel: CoinViewModelProtocol>: View  {
                 EmptyView()
                 
             case .loading:
-                LoadingHeaderView()
+                CoinHeaderLoadingView()
                 
             case .success(let displayData):
                 VStack(alignment: .leading, spacing: 5) {
